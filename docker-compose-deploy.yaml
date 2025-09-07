@@ -1,0 +1,41 @@
+services: 
+  app:
+    build:
+      context: .  # Context for building the app image
+    restart: always  # Always restart the app container on failure
+    volumes:
+      - static-data:/vol/web  # Mount static data volume to the app
+    environment:
+      - DB_HOST=db  # Database host
+      - DB_NAME=${DB_NAME}  # Database name from environment variable
+      - DB_USER=${DB_USER}  # Database user from environment variable
+      - DB_PASS=${DB_PASS}  # Database password from environment variable
+      - SECRET_KEY=${DJANGO_SECRET}  # Secret key for Django from environment variable
+      - ALLOWED_HOSTS=${DJANGO_HOSTS}  # Allowed hosts for Django from environment variable
+    depends_on: 
+      - db  # Ensure the db service is started before the app
+
+  db:
+    image: postgres:17.2-alpine3.21  # Use the specified version of PostgreSQL
+    restart: always  # Always restart the db container on failure
+    volumes:
+      - postgres-data:/var/lib/postgresql/data  # Mount PostgreSQL data volume
+    environment:
+      - POSTGRES_DB=${DB_NAME}  # Database name for PostgreSQL from environment variable
+      - POSTGRES_USER=${DB_USER}  # Database user for PostgreSQL from environment variable
+      - POSTGRES_PASSWORD=${DB_PASS}  # Database password for PostgreSQL from environment variable
+
+  proxy:
+    build:
+      context: ./proxy  # Context for building the proxy image
+    restart: always  # Always restart the proxy container on failure
+    depends_on:
+      - app  # Ensure the app service is started before the proxy
+    ports:
+      - 8000:8000  # Map port 8000 of the host to port 8000 of the proxy
+    volumes:
+      - static-data:/vol/static  # Mount static data volume to the proxy
+
+volumes:
+  postgres-data:  # Volume for PostgreSQL data
+  static-data:  # Volume for static files
