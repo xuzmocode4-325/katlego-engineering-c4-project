@@ -51,3 +51,5 @@ This project aims to build a data engineering pipeline and natural language quer
 - Integrate the RESTful API within the Dockerized environment for seamless operation.
 
 ---
+
+Regex to replace filler text from requirements: `@\sfile:///[a-zA-z]+/\S+`
