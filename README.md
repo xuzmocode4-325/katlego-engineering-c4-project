@@ -1,4 +1,4 @@
-# Capstone Project: Data Engineering with Snowflake, LangGraph, Fast AI, and Docker
+# Capstone Project: Data Engineering with Django, PostgreSQL LangGraph and Docker
 
 ## Project Overview
 
