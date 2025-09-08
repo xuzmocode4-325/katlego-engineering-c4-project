@@ -2,54 +2,49 @@
 
 ## Project Overview
 
-This project aims to build a data engineering pipeline and natural language querying system using Snowflake for data warehousing, LangGraph and Fast AI for natural language data access, and Docker for containerization and deployment.
+This project aims to build a data engineering pipeline and natural language querying system using Django, Docker, PostgreSQL and LangGraph.
 
 ---
 
-## Step 1: Database Design and ETL Pipeline
+## Step 1: Database Design
 
-- Create a Snowflake account and set up a new database.
 - Design the database schema based on the provided Excel sheet structure.
-- Develop SQL scripts to insert and query data.
-- Build a Python-based ETL script utilizing `pandas`:
-  - Extract data from CSV files.
-  - Transform data through cleaning and standardization.
-  - Load transformed data into Snowflake.
 
 ---
 
-## Step 2: Automation
+## Step 2: ETL Pipeline
 
-- Schedule the ETL job using a cloud scheduler (e.g., AWS CloudWatch, Azure Scheduler) or local scheduler (e.g., cron).
-- Implement Apache Airflow to manage and orchestrate ETL workflows and scheduling.
+- Develop an ETL pipeline to populate a PostgreSQL database using the Django ORM.
 
 ---
 
 ## Step 3: Data Access Layer
 
-- Create a Fast AI endpoint to enable natural language querying of the data.
-- Integrate LangGraph with Fast AI to facilitate natural language-based data queries.
-- Provide traditional SQL query access for users needing direct database interaction.
+- Create Views and CTEs to Query the Data, Generate Downstream Datasets & Reports.
 
 ---
 
-## Step 4: Dockerisation
+## Step 4: AI Automation
 
-- Develop a Dockerfile to containerize the ETL pipeline and Fast AI endpoint.
-- Create a `Docker Compose` file to manage and orchestrate multi-container services.
-- Deploy the Dockerized application on cloud platforms such as AWS ECS or Azure Kubernetes Service (AKS).
+- Add A RAG agent connection to the DB to enable natural language querying.
 
 ---
 
-## Step 5: Microservice Development
+## Step 5: Dockerisation
 
-- Design a RESTful API to handle:
+- Develop a Dockerfile to containerize the ETL pipeline and API endpoint.
+
+---
+
+## Step 6: Microservice Development
+
+- Design a RESTful API using a web framework to handle:
   - File uploads.
   - ETL process triggering.
   - Data querying and access.
-- Build the API using a web framework FastAPI.
-- Integrate the RESTful API within the Dockerized environment for seamless operation.
 
 ---
 
-Regex to replace filler text from requirements: `@\sfile:///[a-zA-z]+/\S+`
+## Step 7: Deployment
+
+- Deploy the service on a cloud hosting provider.

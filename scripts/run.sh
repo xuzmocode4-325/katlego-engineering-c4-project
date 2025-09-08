@@ -18,4 +18,4 @@ python manage.py migrate
 # - Run in master mode
 # - Enable threading
 # - Load the WSGI application from the app.wsgi module
-uwsgi --socket :9000 --workers 4 --master --enable-threads --module app.wsgi
+uwsgi --socket :8000 --workers 4 --master --enable-threads --module c4_capstone.wsgi
