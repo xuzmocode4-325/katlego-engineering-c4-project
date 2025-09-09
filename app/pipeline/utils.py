@@ -4,7 +4,7 @@ from django_countries import countries
 from django.db import transaction
 from core.utils import snake_to_pascal
 from core.models import (AgeRange, Country, Experience, Track, Referral, SkillLevel,
-    Aim, Student, Motivation, Registration, Outcomes )
+    Aim, Student, Motivation, HoursAvailable, Registration, Outcomes )
  
 logger =  logging.getLogger(__file__)
 
@@ -36,7 +36,7 @@ transform_kwargs = {
 }
 
 category_columns = [
-    'age_range', 'country', 'experience', 'track', 'referral', 'skill_level', 'aim'
+    'age_range', 'country', 'experience', 'track', 'referral', 'skill_level', 'aim', 'hours_available'
 ]
 
 
@@ -298,6 +298,7 @@ class Load:
                         'experience_id': int(row['experience_id']),
                         'track_id': int(row['track_id']),
                         'skill_level_id': int(row['skill_level_id']),
+                        'hours_available_id':int(row['hours_available_id'])
                     }
                 )
             except Exception as e:
@@ -352,6 +353,7 @@ class Load:
             'track_id': Track,
             'referral_id': Referral,
             'skill_level_id': SkillLevel,
+            'hours_available_id': HoursAvailable
         }
 
         for fk_field, Model in fk_fields.items():

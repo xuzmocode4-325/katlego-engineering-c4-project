@@ -65,6 +65,9 @@ class Aim(models.Model):
 class Referral(models.Model):
     referral = models.CharField()
 
+class HoursAvailable(models.Model):
+    hours_available = models.CharField()
+
 class SkillLevel(models.Model):
     skill_level = models.CharField()
     skill_description = models.CharField()
@@ -83,6 +86,7 @@ class Student(models.Model):
     track = models.ForeignKey(Track, on_delete=models.CASCADE)
     referral = models.ForeignKey(Referral, on_delete=models.CASCADE)
     skill_level = models.ForeignKey(SkillLevel, on_delete=models.CASCADE)
+    hours_available = models.ForeignKey(HoursAvailable, on_delete=models.CASCADE)
 
 class Motivation(models.Model):
     student = models.ForeignKey(
