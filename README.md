@@ -4,39 +4,41 @@
 
 This project aims to build a data engineering pipeline and natural language querying system using Django, Docker, PostgreSQL and LangGraph.
 
+## Construction Steps
+
 ---
 
-## Step 1: Database Design
+### Step 1: Database Design
 
 - Design the database schema based on the provided Excel sheet structure.
 
 ---
 
-## Step 2: ETL Pipeline
+### Step 2: ETL Pipeline
 
 - Develop an ETL pipeline to populate a PostgreSQL database using the Django ORM.
 
 ---
 
-## Step 3: Data Access Layer
+### Step 3: Data Access Layer
 
 - Create Views and CTEs to Query the Data, Generate Downstream Datasets & Reports.
 
 ---
 
-## Step 4: AI Automation
+### Step 4: AI Automation
 
 - Add A RAG agent connection to the DB to enable natural language querying.
 
 ---
 
-## Step 5: Dockerisation
+### Step 5: Dockerisation
 
 - Develop a Dockerfile to containerize the ETL pipeline and API endpoint.
 
 ---
 
-## Step 6: Microservice Development
+### Step 6: Micro-service Development
 
 - Design a RESTful API using a web framework to handle:
   - File uploads.
@@ -48,3 +50,15 @@ This project aims to build a data engineering pipeline and natural language quer
 ## Step 7: Deployment
 
 - Deploy the service on a cloud hosting provider.
+
+___
+
+## Operational Steps
+
+1. Clone this repo.
+2. Change directories to the root of "katlego-engineering-c4-project"
+3. Run the `docker build .` command.
+4. Run the `docker compose up` command.
+5. Open `localhost:8000/api/docs` in your favorite browser.
+6. Upload the `Cohort 4 Capstone Project - Dataset.xlsx` spreadsheet via the ETL endpoint.
+7. Interact with all other API endpoints.
