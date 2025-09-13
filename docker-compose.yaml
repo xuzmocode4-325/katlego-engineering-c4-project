@@ -19,6 +19,7 @@ services:
       - DB_NAME=devdb
       - DB_USER=devuser
       - DB_PASS=changeme
+      - GROQ_API_KEY=${GROQ_API_KEY}
       - DEBUG=1
     depends_on: 
       - db

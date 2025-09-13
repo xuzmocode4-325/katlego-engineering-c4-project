@@ -12,6 +12,7 @@ services:
       - DB_PASS=${DB_PASS}  # Database password from environment variable
       - SECRET_KEY=${DJANGO_SECRET}  # Secret key for Django from environment variable
       - ALLOWED_HOSTS=${DJANGO_HOSTS}  # Allowed hosts for Django from environment variable
+      - GROQ_API_KEY=${GROQ_API_KEY}
     depends_on: 
       - db  # Ensure the db service is started before the app
 

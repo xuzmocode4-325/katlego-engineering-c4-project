@@ -34,8 +34,6 @@ ALLOWED_HOSTS.extend(
     )
 )
 
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -45,10 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'agent',
     'core',
     'datasets',
-    'mcp',
     'pipeline',
     'reports', 
     'django_countries'
@@ -83,7 +79,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'c4_capstone.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -116,7 +111,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -127,7 +121,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
