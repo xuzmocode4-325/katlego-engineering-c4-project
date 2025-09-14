@@ -2,7 +2,7 @@ import csv
 from io import StringIO
 from typing import Dict
 from django.db import connection
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+
 
 def run_query(query: str):
     """Run SQL query and return columns + rows."""

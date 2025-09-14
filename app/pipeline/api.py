@@ -15,7 +15,7 @@ loader = Load()
 # Set up logger
 logger = logging.getLogger(__name__)
 
-@router.post("/")
+@router.post("")
 def extract_transform_load_pipeline(request, file: UploadedFile):
     """
     Endpoint to run the full ETL pipeline on an uploaded file.

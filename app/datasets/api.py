@@ -1,15 +1,53 @@
 import logging
 from ninja import Router
-from typing import List, Dict
-from django.db import connection, DatabaseError
+from typing import List
+from django.db import DatabaseError
 from django.http import HttpResponse, JsonResponse
+from core.utils import DatabaseConnection
+from sqlalchemy import create_engine
+
 from .models import Dataset
+
 from .utils import run_query, rows_to_csv
 
 
 logger = logging.getLogger(__name__)
 router = Router(tags=["datasets"])
+conn = DatabaseConnection()
+engine = create_engine(conn.settings_to_uri(for_sql_alchemy=True), pool_pre_ping=True, future=True)
 
+@router.get("/list/")
+def list_datasets(request):
+    """
+    Returns a list of available datasets with their descriptions.
+    """
+    try:
+        datasets = Dataset.objects.all()
+        if datasets.exists():
+            return [
+                {
+                    "dataset_name": obj.name, 
+                    "group": obj.group,
+                    "description": obj.description
+                } 
+                for obj in datasets
+            ]
+        else:
+            raise DatabaseError("Database connection is not available.")
+
+    except DatabaseError as e:
+        logger.error(f"Database error while listing datasets: {e}")
+        return HttpResponse(
+            content="Service temporarily unavailable due to a database error.",
+            status=503
+        )
+    
+    except Exception as e:
+        logger.error(f"An unexpected error occurred: {e}")
+        return HttpResponse(
+            detail="An unexpected error occurred.",
+            status=500
+        )
 
 @router.get("/single/{dataset_name}")
 def export_dataset(request, dataset_name: str, format: str = "csv"):
@@ -47,40 +85,4 @@ def export_dataset(request, dataset_name: str, format: str = "csv"):
         return HttpResponse(
             content=f"Failed to export dataset '{dataset_name}'. Details: {e}",
             status=500,
-        )
-
-
-@router.get("/list/")
-def list_datasets(request):
-    """
-    Returns a list of available datasets with their descriptions.
-    """
-    try:
-        datasets = Dataset.objects.all()
-
-        if datasets.exists():
-            return [
-                {
-                    "dataset_name": obj.name, 
-                    "group": obj.group,
-                    "description": obj.description
-                } 
-                for obj in datasets
-            ]
-            
-        else:
-            raise DatabaseError("Database connection is not available.")
-
-    except DatabaseError as e:
-        logger.error(f"Database error while listing datasets: {e}")
-        return HttpResponse(
-            content="Service temporarily unavailable due to a database error.",
-            status=503
-        )
-    
-    except Exception as e:
-        logger.error(f"An unexpected error occurred: {e}")
-        return HttpResponse(
-            detail="An unexpected error occurred.",
-            status=500
         )

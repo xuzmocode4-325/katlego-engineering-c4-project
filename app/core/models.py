@@ -118,3 +118,13 @@ class Outcomes(models.Model):
     completed_aptitude = models.BooleanField()
     aptitude_score = models.FloatField()
     graduated = models.BooleanField()
+
+class FullProfile(models.Model):
+    student=models.ForeignKey(Student, on_delete=models.CASCADE)
+    experience=models.ForeignKey(Experience, on_delete=models.CASCADE)
+    referral=models.ForeignKey(Referral, on_delete=models.CASCADE)
+    skill_level=models.ForeignKey(SkillLevel, on_delete=models.CASCADE)
+    track=models.ForeignKey(Track, on_delete=models.CASCADE)
+    hours_available=models.ForeignKey(HoursAvailable, on_delete=models.CASCADE)
+    registration_date=models.ForeignKey(Registration, on_delete=models.CASCADE)
+    outcomes=models.ForeignKey(Outcomes, on_delete=models.CASCADE)
