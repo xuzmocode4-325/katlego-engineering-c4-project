@@ -4,6 +4,7 @@ from typing import Dict
 from django.db import connection
 
 
+
 def run_query(query: str):
     """Run SQL query and return columns + rows."""
     with connection.cursor() as cursor:

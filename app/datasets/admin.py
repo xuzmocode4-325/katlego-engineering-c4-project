@@ -1,9 +1,10 @@
 from django.contrib import admin
 from .models import Dataset
 
+
 class DatasetAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group',)
-    list_filter = ('group',)
+    list_display = ('name', 'category',)
+    list_filter = ('category',)
     search_fields = ('name',)
     ordering = ('name',)
     readonly_fields = ['created_at', 'updated_at']

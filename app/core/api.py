@@ -2,7 +2,7 @@ import logging
 from ninja import Router
 from sqlalchemy import create_engine,text
 from typing import List, Optional
-from .utils import table_exists, DatabaseConnection
+from .utils import DatabaseConnection
 from .schemas import ErrorResponse, ColumnSchema, ForeignKeySchema, TableMetadata
 
 logger = logging.getLogger(__name__)
@@ -57,7 +57,7 @@ def table_metadata(request, table_name: str, db_schema: str = "public"):
     try:
         with engine.connect() as conn:
             # Verify table exists to avoid confusing 500s
-            if not table_exists(conn, table_name):
+            if not connector.table_exists(conn, table_name):
                 return 404, ErrorResponse(detail=f"Table '{db_schema}.{table_name}' not found")
 
             # Columns

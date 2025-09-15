@@ -5,6 +5,7 @@ from sqlalchemy import text
 class DatabaseConnection:
     def __init__(self, alias: str = "default"):
         self.alias = alias
+        self.parse_table_name = lambda x: f"core_{x.replace("_", "")}"
 
     def settings_to_uri(self, for_sql_alchemy = False) -> str:
         db = settings.DATABASES[self.alias]
@@ -18,21 +19,20 @@ class DatabaseConnection:
         else:
             return f"postgresql://{user}:{pwd}@{host}:{port}/{name}"
         
-def table_exists(conn, table: str) -> bool:
-    row = conn.execute(
-        text("""
-            SELECT 1
-            FROM information_schema.tables
-            WHERE table_schema = 'public' AND table_name = :table
-            LIMIT 1
-        """),
-        {"table": table},
-    ).first()
-    return bool(row)
+    def table_exists(self, conn, table: str) -> bool:
+        row = conn.execute(
+            text("""
+                SELECT 1
+                FROM information_schema.tables
+                WHERE table_schema = 'public' AND table_name = :table
+                LIMIT 1
+            """),
+            {"table": table},
+        ).first()
+        return bool(row)
 
-def snake_to_pascal(snake_str):
-    # Split by underscore, capitalize each word, then join
-    return ''.join(word.capitalize() for word in snake_str.split('_'))
+    def _snake_to_pascal(self, snake_str):
+        # Split by underscore, capitalize each word, then join
+        return ''.join(word.capitalize() for word in snake_str.split('_'))
 
 
-parse_table_name = lambda x: f"core_{x.replace("_", "")}"

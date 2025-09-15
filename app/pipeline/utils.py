@@ -2,10 +2,12 @@ import logging
 import pandas as pd
 from django_countries import countries
 from django.db import transaction
-from core.utils import snake_to_pascal
+from core.utils import DatabaseConnection
 from core.models import (AgeRange, Country, Experience, Track, Referral, SkillLevel,
     Aim, Student, Motivation, HoursAvailable, Registration, Outcomes )
  
+
+connector = DatabaseConnection() 
 logger =  logging.getLogger(__file__)
 
 hours_mapping_dict = {
@@ -255,7 +257,7 @@ class Load:
         if not isinstance(frame, pd.DataFrame):
             raise ValueError(f"Expected DataFrame for {key}, got {type(frame)}")
 
-        ModelName = snake_to_pascal(key)
+        ModelName = connector._snake_to_pascal(key)
         Model = globals()[ModelName]  # assumes model names match cat_frame title case
 
         for row in frame.itertuples(index=True, name='Row'):

@@ -4,14 +4,14 @@ from django.db import models
 
 
 class Dataset(models.Model): 
-    class Group(models.TextChoices):
+    class Category(models.TextChoices):
         STUDENT = "Student", "Student Datasets"
         AGGREGATE = "Aggregate", "Aggregate Datasets"
         COMBINED = "Combined", "Combined Datasets"
         ANALYTICS = "Analytics", "Analytics Datasets" 
 
     name = models.CharField()
-    group = models.CharField(choices=Group.choices)
+    category = models.CharField(choices=Category.choices)
     description = models.TextField()
     query = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
