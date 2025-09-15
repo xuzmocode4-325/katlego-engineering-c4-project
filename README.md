@@ -44,6 +44,7 @@ This project aims to build a data engineering pipeline and natural language quer
   - File uploads.
   - ETL process triggering.
   - Data querying and access.
+  - File downloads.
 
 ---
 
