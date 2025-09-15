@@ -10,37 +10,37 @@ This project aims to build a data engineering pipeline and natural language quer
 
 ---
 
-### Step 1: Database Design
+#### Step 1: Database Design
 
 - Design the database schema based on the provided Excel sheet structure.
 
 ---
 
-### Step 2: ETL Pipeline
+#### Step 2: ETL Pipeline
 
 - Develop an ETL pipeline to populate a PostgreSQL database using the Django ORM.
 
 ---
 
-### Step 3: Data Access Layer
+#### Step 3: Data Access Layer
 
 - Create Views and CTEs to Query the Data, Generate Downstream Datasets & Reports.
 
 ---
 
-### Step 4: AI Automation
+#### Step 4: AI Automation
 
 - Add A RAG agent connection to the DB to enable natural language querying.
 
 ---
 
-### Step 5: Dockerisation
+#### Step 5: Dockerisation
 
 - Develop a Dockerfile to containerize the ETL pipeline and API endpoint.
 
 ---
 
-### Step 6: Micro-service Development
+#### Step 6: Micro-service Development
 
 - Design a RESTful API using a web framework to handle:
   - File uploads.
@@ -50,23 +50,54 @@ This project aims to build a data engineering pipeline and natural language quer
 
 ---
 
-## Step 7: Deployment
+#### Step 7: Deployment
 
 - Deploy the service on a cloud hosting provider.
 
-___
+---
 
-## Operational Steps
+## Setup Steps
+
+### Requirements
+
+[Docker Engine](https://www.docker.com/)
+
+### Getting Started
 
 1. Clone this repo.
-2. Change directories to the root of "katlego-engineering-c4-project"
-3. Run the `docker build .` command.
-4. Run the `docker compose up` command.
-5. Open `localhost:8000/api/docs` in your favorite browser.
-6. Upload the `Cohort 4 Capstone Project - Dataset.xlsx` spreadsheet via the `etl` endpoint.
-7. Get database info via the `db-meta` endpoint.
-8. List available datasets and download them via the `datasets` endpoint.
-9. Get information from the database via natural language queries using the `agent` endpoint.
-10. Generate and download visual report from the data using the `report` endpoint.
+2. Change directories to the root of `katlego-engineering-c4-project`
+3. Open up the terminal in the root of the project and run the following command:
+
+```bash
+docker compose up
+```
 
 ![Database schema diagram illustrating tables for users, projects, and datasets, each with labeled columns and connecting lines that indicate foreign key relationships. The layout is organized and clear, set within a digital workspace featuring a neutral background. No visible text is present in the image. The overall tone is professional and informative.](assets/images/Screenshot%202025-08-22%20at%2016.29.26.png)
+
+### Using The Features
+
+- Open `localhost:8000/api/docs` in your favorite browser to access API endpoints.
+- Upload the `Cohort 4 Capstone Project - Dataset.xlsx` spreadsheet via the `etl` endpoint.
+- View the database schema via the `localhost:8000/schema-viewer` url.
+- Get a list database names using the `db-meta/list` endpoint.
+- Past a database name into the `db-meta/table/{table_name}` endpoint to get info on the table structure.
+into the database.
+- List available datasets via the `datasets/list` endpoint.  
+- Download a dataset as a CSV file via the `datasets/download` endpoint.
+- Generate and download visual report of the data using the `reports/download` endpoint.
+- Get information from the database via natural language queries using the `agent` endpoint (experimental).
+
+#### Request Body Structure for Natural Language DB Queries
+
+```json
+{
+  "messages": [
+    {
+      "role": "user",
+      "content": "{your-query-here}"
+    }
+  ],
+  "thread_id": "string",
+  "checkpoint_ns": "string"
+}
+```

@@ -1,6 +1,51 @@
+import time
+from typing import Iterable
 from django.core.management.base import BaseCommand, CommandError
-from django.db import transaction
-from datasets.models import Dataset
+from django.db import connections, DEFAULT_DB_ALIAS
+from django.db.migrations.executor import MigrationExecutor
+from datasets.models import Dataset 
+
+def wait_for_app_migrations(
+    apps: Iterable[str],
+    *,
+    alias: str = DEFAULT_DB_ALIAS,
+    max_wait: int = 120,
+    poll: int = 5,
+) -> None:
+    """
+    Block until all migrations for the given app labels are applied,
+    or raise CommandError after max_wait seconds.
+    """
+    deadline = time.time() + max_wait
+    last_err = None
+    while time.time() < deadline:
+        try:
+            conn = connections[alias]
+            executor = MigrationExecutor(conn)
+            plan = executor.migration_plan(executor.loader.graph.leaf_nodes())
+            # plan is a list of (Migration, backwards) tuples
+            pending = [m for (m, _back) in plan if m.app_label in set(apps)]
+            if not pending:
+                return
+        except Exception as e:
+            # DB might not be up yet; keep trying
+            last_err = e
+        time.sleep(poll)
+
+    raise CommandError(
+        f"Migrations not ready for apps {tuple(apps)} after {max_wait}s."
+        + (f" Last error: {last_err}" if last_err else "")
+    )
+
+def ensure_tables_exist(required_tables: Iterable[str], *, alias: str = DEFAULT_DB_ALIAS) -> None:
+    """
+    Ensure all required DB tables exist; raise CommandError if any missing.
+    """
+    conn = connections[alias]
+    existing = set(conn.introspection.table_names())
+    missing = [t for t in required_tables if t not in existing]
+    if missing:
+        raise CommandError(f"Missing tables: {', '.join(missing)}")
 
 DATASETS = {
  'student_basic': {'description': 'Basic student info including gender, age, country, track, skill level, and hours available.',
@@ -57,15 +102,56 @@ CATEGORY_MAP = {
 class Command(BaseCommand):
     help = "Load or update Dataset rows from the in-file DATASETS mapping."
 
+    def add_arguments(self, parser):
+        parser.add_argument("--wait", type=int, default=120, help="Max seconds to wait for migrations.")
+        parser.add_argument("--poll", type=int, default=5, help="Polling interval (seconds).")
+        parser.add_argument("--alias", default=DEFAULT_DB_ALIAS, help="Database alias to use.")
+
     def handle(self, *args, **options):
+        alias = options["alias"]
+
+        # 1) Wait for required apps' migrations
+        wait_for_app_migrations(["core", "datasets"], alias=alias, max_wait=options["wait"], poll=options["poll"])
+
+        # 2) Ensure key tables exist before writing/using queries
+        ensure_tables_exist(
+            [
+                "datasets_dataset",
+                "core_student",
+                "core_agerange",
+                "core_country",
+                "core_experience",
+                "core_referral",
+                "core_skilllevel",
+                "core_track",
+                "core_hoursavailable",
+                "core_registration",
+                "core_outcomes",
+                "core_motivation",
+                "core_aim",
+            ],
+            alias=alias,
+        )
+
+        # 3) Upsert datasets
+        from django.db import transaction
+        from datasets.models import Dataset
+
+        CATEGORY_MAP = {
+            "Student": Dataset.Category.STUDENT,
+            "Aggregate": Dataset.Category.AGGREGATE,
+            "Combined": Dataset.Category.COMBINED,
+            "Analytics": Dataset.Category.ANALYTICS,
+        }
+
         created, updated = 0, 0
-        with transaction.atomic():
+        with transaction.atomic(using=alias):
             for name, meta in DATASETS.items():
                 g = meta.get("category")
                 if g not in CATEGORY_MAP:
-                    raise CommandError(f"Unknown group '{g}' for dataset '{name}'")
+                    raise CommandError(f"Unknown category '{g}' for dataset '{name}'")
 
-                obj, was_created = Dataset.objects.update_or_create(
+                obj, was_created = Dataset.objects.using(alias).update_or_create(
                     name=name,
                     defaults={
                         "category": CATEGORY_MAP[g],
@@ -77,3 +163,4 @@ class Command(BaseCommand):
                 updated += int(not was_created)
 
         self.stdout.write(self.style.SUCCESS(f"Datasets loaded. created={created}, updated={updated}"))
+

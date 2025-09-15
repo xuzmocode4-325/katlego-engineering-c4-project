@@ -1,5 +1,6 @@
 # --- Stage 1: Build stage with all dependencies ---
 FROM python:3.13-alpine3.21 AS builder
+LABEL maintainer="xuzmonomi.com"
 
 # Install build-time dependencies, including libstdc++
 RUN apk add --no-cache \
@@ -32,14 +33,15 @@ FROM python:3.13-alpine3.21
 
 # Headless + unbuffered Python output for logs
 ENV PYTHONUNBUFFERED=1 \
-    MPLBACKEND=Agg \
-    PATH="/py/bin:$PATH"
+    MPLBACKEND=Agg 
+    
 
 # Copy the virtual environment and installed packages from the builder stage
 COPY --from=builder /py /py
 # Copy other runtime assets and code
 COPY ./app /app
 COPY ./scripts /scripts
+
 
 WORKDIR /app
 EXPOSE 8000
@@ -55,11 +57,13 @@ RUN apk add --no-cache \
         jpeg
 
 # Set up user and permissions
-RUN adduser --disabled-password --no-create-home app-user && \
-    mkdir -p /vol/web/media /vol/web/static && \
-    chown -R app-user:app-user /vol && \
+RUN adduser --disabled-password --home /home/app-user app-user && \
+    mkdir -p /vol/web/media /vol/web/static /tmp/.cache/matplotlib && \
+    chown -R app-user:app-user /vol /tmp/.cache/matplotlib /home/app-user && \
     chmod -R 755 /vol && \
     chmod -R +x /scripts
+
+ENV PATH="/scripts:/py/bin:$PATH"
 
 USER app-user
 

@@ -27,7 +27,7 @@ def list_datasets(request):
             return [
                 {
                     "dataset_name": obj.name, 
-                    "group": obj.group,
+                    "category": obj.category,
                     "description": obj.description
                 } 
                 for obj in datasets
@@ -49,8 +49,8 @@ def list_datasets(request):
             status=500
         )
 
-@router.get("/single/{dataset_name}")
-def export_dataset(request, dataset_name: str, format: str = "csv"):
+@router.get("/download/{dataset_name}")
+def export_dataset(request, dataset_name: str):
     """
     Expose any predefined dataset as CSV (default) or JSON.
     Example:
@@ -62,12 +62,6 @@ def export_dataset(request, dataset_name: str, format: str = "csv"):
         logger.info(f"Running dataset query: '{dataset_name}'")
         dataset = Dataset.objects.get(name=dataset_name)
         columns, rows = run_query(dataset.query )
-
-        # Return JSON if requested
-        if format.lower() == "json":
-            data = [dict(zip(columns, row)) for row in rows]
-            logger.info(f"Export successful: '{dataset_name}' as JSON")
-            return JsonResponse(data, safe=False)
 
         # Default: CSV
         csv_data = rows_to_csv(columns, rows)
