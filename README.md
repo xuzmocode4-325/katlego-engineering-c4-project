@@ -63,7 +63,10 @@ ___
 3. Run the `docker build .` command.
 4. Run the `docker compose up` command.
 5. Open `localhost:8000/api/docs` in your favorite browser.
-6. Upload the `Cohort 4 Capstone Project - Dataset.xlsx` spreadsheet via the ETL endpoint.
-7. Interact with all other API endpoints.
+6. Upload the `Cohort 4 Capstone Project - Dataset.xlsx` spreadsheet via the `etl` endpoint.
+7. Get database info via the `db-meta` endpoint.
+8. List available datasets and download them via the `datasets` endpoint.
+9. Get information from the database via natural language queries using the `agent` endpoint.
+10. Generate and download visual report from the data using the `report` endpoint.
 
 ![Database schema diagram illustrating tables for users, projects, and datasets, each with labeled columns and connecting lines that indicate foreign key relationships. The layout is organized and clear, set within a digital workspace featuring a neutral background. No visible text is present in the image. The overall tone is professional and informative.](assets/images/Screenshot%202025-08-22%20at%2016.29.26.png)
