@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'datasets',
     'pipeline',
     'reports', 
-    'django_countries'
+    'django_countries',
+    'schema_viewer'
 ]
 
 MIDDLEWARE = [

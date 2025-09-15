@@ -1,5 +1,7 @@
 # Capstone Project: Data Engineering with Django, PostgreSQL LangGraph and Docker
 
+![Database schema diagram showing tables, columns, and relationships for the capstone project. The diagram is organized with tables representing users, projects, and datasets, connected by lines indicating foreign key relationships. The environment is a digital workspace with a neutral tone. No visible text in the image.](assets/images/Screenshot%202025-08-22%20at%2007.04.33.png)
+
 ## Project Overview
 
 This project aims to build a data engineering pipeline and natural language querying system using Django, Docker, PostgreSQL and LangGraph.
@@ -63,3 +65,5 @@ ___
 5. Open `localhost:8000/api/docs` in your favorite browser.
 6. Upload the `Cohort 4 Capstone Project - Dataset.xlsx` spreadsheet via the ETL endpoint.
 7. Interact with all other API endpoints.
+
+![Database schema diagram illustrating tables for users, projects, and datasets, each with labeled columns and connecting lines that indicate foreign key relationships. The layout is organized and clear, set within a digital workspace featuring a neutral background. No visible text is present in the image. The overall tone is professional and informative.](assets/images/Screenshot%202025-08-22%20at%2016.29.26.png)
